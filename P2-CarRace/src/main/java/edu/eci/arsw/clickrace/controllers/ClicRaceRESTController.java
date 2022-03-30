@@ -64,6 +64,21 @@ public class ClicRaceRESTController {
 
     }
 
+    @RequestMapping(path = "/{racenum}/winner",method = RequestMethod.PUT)
+    public ResponseEntity<?> getWinner(@PathVariable(name = "racenum") String racenum,@RequestBody RaceParticipant rp) {
+        try {
+            services.getWinner(Integer.parseInt(racenum),rp);
+                    return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (ServicesException ex) {
+            Logger.getLogger(ClicRaceRESTController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>(ex.getLocalizedMessage(),HttpStatus.BAD_REQUEST);
+        } catch (NumberFormatException ex){
+            Logger.getLogger(ClicRaceRESTController.class.getName()).log(Level.SEVERE, null, ex);
+            return new ResponseEntity<>("/{racenum}/ must be an integer value.",HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     
 
     

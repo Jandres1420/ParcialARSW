@@ -10,16 +10,36 @@ var mycarypos=10;
 var loadedCars=[];
 var carsCurrentXPositions=[];
 var carsCurrentYPositions=[];
-
+var buttonMove ;
 
 var stompClient = null;
 
-movex = function(){    
-    mycarxpos+=10;
+movex = function(){   
+    console.log("carros cargados");
+    console.log(loadedCars); 
+    console.log(loadedCars.length); 
+    console.log(buttonMove);
+    if(loadedCars.length ===0){
+        alert("Por favor cargue los carros")
+        
+    }
+    if(loadedCars.length<=5){
+        mycarxpos+=30;
     paintCars();
     stompClient.send("/topic/car"+mycar.number, {}, JSON.stringify({car:mycar.number,xpos:mycarxpos}));
+    initWinner();
+    }
+    else{
+        alert("Ingrese más de 5 carros y carguelos para poder empezar a mover")
+    }
+    
 };
 
+initWinner = function(){
+    if(mycarxpos>=640){
+        alert("Hay un ganador")
+    }
+}
 
 initAndRegisterInServer = function(){
     mycar={number:$("#playerid").val()};
@@ -46,6 +66,10 @@ initAndRegisterInServer = function(){
 loadCompetitorsFromServer = function () {
     if (mycar == undefined) {
         alert('Register your car first!');
+    if(loadedCars.length !=5){
+        console.log("entre al if");
+        console.log(buttonMove);
+    }
     } else {
         $.get("races/25/participants",
                 function (data) {
@@ -137,7 +161,9 @@ $(document).ready(
         
         function () {
             console.info('loading script!...');
-            $(".controls").prop('disabled', false);    
+            $(".controls").prop('disabled', false); 
+            buttonMove = $(".hide");
+            buttonMove.hidden
             $("#racenum").prop('disabled', true);    
         }
 );
